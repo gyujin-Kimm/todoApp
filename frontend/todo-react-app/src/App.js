@@ -9,16 +9,16 @@ import Container from '@mui/material/Container';
 
 function App () {
   const [items, setItems] = useState([
-    {
-      id: "0",
-      title: "Hello World 1",
-      done: true,
-    },
-    {
-      id: "1",
-      title: "Hello World 2",
-      done: false,
-    },
+    // {
+    //   id: "0",
+    //   title: "Hello World 1",
+    //   done: true,
+    // },
+    // {
+    //   id: "1",
+    //   title: "Hello World 2",
+    //   done: false,
+    // },
     ]);
 
     const addItem = (item) => {
@@ -29,11 +29,21 @@ function App () {
       console.log("items : " , items);
     };
 
+    const deleteItem = (item) => {
+      // 삭제할 아이템을 찾는다.
+      const newItems = items.filter(e => e.id !== item.id);
+      // 삭제할 아이템을 제외한 아이템을 다시 배열에 저장한다.
+      setItems([...newItems]);
+    }
+
     let todoItems = items.length > 0 && (
       <Paper style={{ margin: 16 }}>
         <List>
           {items.map((item) => (
-            <Todo item={item} key={item.id} />
+            <Todo 
+            item={item} 
+            key={item.id}
+            deleteItem={deleteItem} />
           ))}
         </List>
       </Paper>
