@@ -15,7 +15,7 @@ const AddTodo = (props) => {
 
   //enterKeyEventHandler 함수
   const enterKeyEventHandler = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter'  && e.nativeEvent.isComposing === false) {
       onButtonClick();
     }
   };
