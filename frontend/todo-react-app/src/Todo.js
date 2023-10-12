@@ -22,8 +22,7 @@ const Todo = (props) => {
 
   // editEventHandler() 함수 추가
   const editEventHandler = (e) => {
-    item.title = e.target.value;
-    editItem();
+    setItem({...item, title: e.target.value});
   };
 
   // turnOffReadOnly 함수 작성
@@ -35,12 +34,13 @@ const Todo = (props) => {
   const turnOnReadOnly = (e) => {
     if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
       setReadOnly(true);
+      editItem(item);
     }
   };
 
   const checkboxEventHandler = (e) => {
     item.done = e.target.checked;
-    editItem();
+    editItem(item);
   };
 
 
