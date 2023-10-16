@@ -14,14 +14,26 @@ import java.util.Date;
 @Slf4j
 @Service
 public class TokenProvider {
-    private static final String SECRET_KEY = "1234";
+    private static final String SECRET_KEY = "FlRpX30pMqDbiAkmlfArbrmVkDD4RqISskGZmBFax5oGVxzXXWUzTR5JyskiHMIV9M10icegkpi46AdvrcX1E6CmTUBc6IFbTPiD";
 
     public String create(UserEntity userEntity) {
         // 기한 지금으로부터 1일로 설정
         Date expiryDate = Date.from(
                 Instant.now()
                         .plus(1, ChronoUnit.DAYS));
-
+        /*
+        { // header
+            "alg":"HS512"
+        }.
+        { // payload
+            "sub":"40288093784915d201784916a40c0001",
+            "iss": "demo app",
+            "iat":1595733657
+            "exp":1595733657
+        }.
+        // SECRET_KEY를 이용해 서명한 부분
+        Nn4d1MOVLZg79sffACTIpCPK~~~~~~ZOg
+         */
 
         // JWT Token 생성
         return Jwts.builder()
@@ -47,5 +59,4 @@ public class TokenProvider {
 
         return claims.getSubject();
     }
-
 }
