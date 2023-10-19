@@ -8,6 +8,8 @@ import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -54,12 +57,13 @@ public class UserController {
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
         UserEntity user = userService.getByCredentials(
                 userDTO.getUsername(),
-                userDTO.getPassword());
+                userDTO.getPassword(),
+                passwordEncoder);
 
         if (user != null) {
             // 토큰 생성
-            String token = tokenProvider.create(user);
-            final UserDTO responseUserDTO = userDTO.builder()
+            final String token = tokenProvider.create(user);
+            final UserDTO responseUserDTO = UserDTO.builder()
                     .username(user.getUsername())
                     .id(user.getId())
                     .token(token)
@@ -74,5 +78,4 @@ public class UserController {
                     .body(responseDTO);
         }
     }
-
 }

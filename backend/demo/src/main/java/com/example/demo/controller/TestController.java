@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("test")
+@RequestMapping("/test")
 public class TestController {
 
     @GetMapping("/testRequestBody")

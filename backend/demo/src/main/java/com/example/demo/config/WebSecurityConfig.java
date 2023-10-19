@@ -3,17 +3,20 @@ package com.example.demo.config;
 import com.example.demo.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.filters.CorsFilter;
+//import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @Slf4j
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -22,12 +25,13 @@ public class WebSecurityConfig {
      * component-based security configuration으로의 사용자 전환 격려 위함.
      * 따라서 아래와 같이 bean으로 등록하여 사용.
      */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(auth -> auth.anyRequest().permitAll());
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeRequests(auth -> auth.anyRequest().permitAll());
+//        return http.build();
+//    }
 
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         // http 시큐리티 빌더
         http.cors() // WebMvcConfig에서 이미 설정했으므로 기본 cors 설정.
@@ -51,6 +55,7 @@ public class WebSecurityConfig {
         http.addFilterAfter(
                 jwtAuthenticationFilter,
                 CorsFilter.class
+//                UsernamePasswordAuthenticationFilter.class
         );
     }
 
