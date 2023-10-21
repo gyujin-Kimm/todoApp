@@ -28,3 +28,13 @@ export function call(api, method, request) {
     console.log(error);
   });
 }
+
+export function signin(userDTO) {
+  return call("/auth/signin", "POST", userDTO)
+    .then((response) => {
+      if (response.token) {
+        // token이 존재하는 경우 Todo 화면으로 리다이렉트
+        window.location.href = "/";
+      }
+    });
+}
