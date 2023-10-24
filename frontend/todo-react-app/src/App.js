@@ -2,10 +2,17 @@ import "./App.css";
 import Todo from "./Todo";
 import AddTodo from "./AddTodo";
 import React, { useEffect, useState } from "react";
-import List from '@mui/material/List';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import { call } from "./service/ApiService";
+import {
+  Container,
+  List,
+  Paper,
+  Grid,
+  Button,
+  AppBar,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { call, signout } from "./service/ApiService";
 
 
 function App () {
@@ -21,10 +28,13 @@ function App () {
     //   done: false,
     // },
     ]);
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
-    call("/todo", "GET", null)
-    .then((response) => setItems(response.data));
+    call("/todo", "GET", null).then((response) => {
+      setItems(response.data);
+      setLoading(false);
+    });
   }, []);
 
   const addItem = (item) => {
@@ -40,7 +50,7 @@ function App () {
   const editItem = (item) => {
     call("/todo", "PUT", item)
     .then((response) => setItems(response.data));
-  }
+  };
 
     let todoItems = items.length > 0 && (
       <Paper style={{ margin: 16 }}>
@@ -56,14 +66,47 @@ function App () {
       </Paper>
     );
 
-  return (
-    <div className="App">
-      <Container maxWidth="md">
-        <AddTodo addItem={addItem} />
-        <div className="TodoList">{todoItems}</div>
-      </Container>
-    </div>
-  );
+    // navigationBar 추가
+    let navigationBar = (
+      <AppBar position="static">
+        <Toolbar>
+          <Grid justifyContent="space-between" container>
+            <Grid item>
+              <Typography variant="h6">오늘의 할일</Typography>
+            </Grid>
+            <Grid item>
+              <Button color="inherit" raised onClick={signout}>
+                로그아웃
+              </Button>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+    );
+
+    /* 로딩중이 아닐 때 렌더링할 부분 */
+    let todoListPage = (
+      <div>
+        {navigationBar} {/* 네비게이션 바 렌더링 */}
+        <Container maxWidth="md">
+          <AddTodo addItem={addItem} />
+          <div className="TodoList">{todoItems}</div>
+        </Container>
+      </div>
+    );
+
+    /* 로딩중일 때 렌더링 할 부분 */
+    let loadingPage = <h1> 로딩중.. </h1>;
+    let content = loadingPage;
+
+    if (!loading) {
+      /* 로딩중이 아니면 todoListPage를 선택 */
+      content = todoListPage;
+    }
+
+    /* 선택한 content 렌더링 */
+    return <div className="App">{content}</div>;
+
 }
 
 export default App;
