@@ -23,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenProvider tokenProvider;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -34,7 +34,7 @@ public class UserController {
             // 요청을 이용해 저장할 유저 만들기
             UserEntity user = UserEntity.builder()
                     .username(userDTO.getUsername())
-                    .password(userDTO.getPassword())
+                    .password(passwordEncoder.encode(userDTO.getPassword()))
                     .build();
             // 서비스를 이용해 리포지토리에 유저 저장
             UserEntity registeredUser = userService.create(user);
